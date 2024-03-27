@@ -123,6 +123,8 @@
 
 Swagger documentation for the API endpoints is available at http://localhost:8500/documentations when the server is running. You can use Swagger UI or a similar tool to interactively explore and test the API.
 
+Deployed Swagger Documenatation https://pioneer-assessment.onrender.com/documentations
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
