@@ -5,6 +5,7 @@ const swaggerUi=require("swagger-ui-express")
 const app = express();
 
 const { auth } = require("./Routes/auth.route");
+const { data } = require("./Routes/data.route");
 const { connection } = require("./Config/db");
 
 
@@ -21,6 +22,8 @@ const requiredEnvVariables = ['DATABASE_URL', 'PORT',"SECRET_KEY"]; // Add your 
 
 // app.use(cors(corsOptions));
 app.use("/auth",auth);
+app.use("/",data);
+
 
 
 const options={

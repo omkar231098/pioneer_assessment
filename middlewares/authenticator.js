@@ -5,11 +5,17 @@ require("dotenv").config();
 
 const authenticate = async (req, res, next) => {
   try {
-    const token = req.headers.authorization;
+    const authHeader = req.headers.authorization;
 
-    // Check if token is provided
-    if (!token) {
+    // Check if Authorization header is provided
+    if (!authHeader) {
       return res.status(401).json({ message: "Authorization token is missing" });
+    }
+
+    // Check if the Authorization header is in the expected format (Bearer token)
+    const [bearer, token] = authHeader.split(" ");
+    if (!bearer || !token || bearer.toLowerCase() !== "bearer") {
+      return res.status(401).json({ message: "Invalid Authorization header format" });
     }
 
     // Checking for blacklisted token
@@ -21,7 +27,7 @@ const authenticate = async (req, res, next) => {
     // Verify and decode the token
     const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
     const { id } = decodedToken;
-console.log(decodedToken)
+
     // Check if the user exists
     const user = await UserModel.findById(id);
     if (!user) {
