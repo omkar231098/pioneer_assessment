@@ -21,7 +21,7 @@
 
 4. Start the server:
    ```bash
-   npm start
+   npm run server
    ```
 
    The server should now be running on http://localhost:8500.
