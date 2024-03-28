@@ -20,7 +20,6 @@ auth.get("/gethello",authenticate,gethello); // User logout
 
 
 module.exports = { auth };
-
 /**
  * @swagger
  * components:
@@ -30,67 +29,38 @@ module.exports = { auth };
  *       properties:
  *         username:
  *           type: string
- *           description: The username of the user.
- *           example: johndoe
  *         password:
  *           type: string
- *           description: The password of the user.
- *           example: password123
- *     APIResponse:
+ *     SuccessResponse:
  *       type: object
  *       properties:
- *         count:
- *           type: integer
- *           example: 5
- *           description: Number of entries returned.
- *         entries:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/APIEntry'
- *     APIEntry:
- *       type: object
- *       properties:
- *         API:
- *           type: string
- *           description: The name of the API.
- *           example: arcsecond.io
- *         Description:
- *           type: string
- *           description: Description of the API.
- *           example: Multiple astronomy data sources
- *         Auth:
- *           type: string
- *           description: Authentication type for the API.
- *           example: ''
- *         HTTPS:
+ *         success:
  *           type: boolean
- *           description: Indicates if the API supports HTTPS.
  *           example: true
- *         Cors:
+ *         message:
  *           type: string
- *           description: Cross-Origin Resource Sharing (CORS) policy of the API.
- *           example: unknown
- *         Link:
- *           type: string
- *           description: Link to the API documentation or website.
- *           example: https://api.arcsecond.io/
- *         Category:
- *           type: string
- *           description: Category of the API.
- *           example: Science & Math
+ *           example: Registration successful! You can now log in.
  *     ErrorResponse:
  *       type: object
  *       properties:
  *         success:
  *           type: boolean
- *           description: Indicates whether the request was successful.
  *           example: false
  *         message:
  *           type: string
- *           description: Error message.
- *           example: User not found
- * 
- * 
+ *           example: User already exists. Please use a different username.
+ *     HelloMessageResponse:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           example: Hello, World!
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: apiKey
+ *       in: header
+ *       name: Authorization
+ *       description: Enter your Bearer token in the format "Bearer {token}"
  */
 
 /**
@@ -124,13 +94,9 @@ module.exports = { auth };
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
- */
-
-/**
- * @swagger
  * /auth/login:
  *   post:
- *     summary: Log in with username and password.
+ *     summary: Log in a user.
  *     tags: [Authentication]
  *     requestBody:
  *       required: true
@@ -140,66 +106,53 @@ module.exports = { auth };
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       '200':
- *         description: Login successful.
+ *         description: User logged in successfully.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/SuccessResponse'
  *       '400':
- *         description: Incorrect password or user not found.
+ *         description: Incorrect password or invalid credentials.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '404':
+ *         description: User not found.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  *       '500':
- *         description: Failed to login.
+ *         description: Failed to login due to internal server error.
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
- */
-
-/**
- * @swagger
  * /auth/logout:
  *   post:
- *     summary: Log out the user and blacklist the token.
+ *     summary: Log out a user.
  *     tags: [Authentication]
  *     responses:
  *       '200':
- *         description: Logged out successfully.
- *         content:
- *           text/plain:
- *             schema:
- *               type: string
- *               example: Logged out successfully
+ *         description: User logged out successfully.
  *       '500':
- *         description: Server error.
- *         content:
- *           text/plain:
- *             schema:
- *               type: string
- *               example: Server error
- */
-
-/**
- * @swagger
+ *         description: Server error during logout.
  * /auth/gethello:
  *   get:
- *     summary: Sample route to return a hello message (protected route).
- *     tags: 
- *       - Sample
+ *     summary: Get a hello message (protected route).
+ *     tags: [Authentication]
  *     security:
- *       - bearerAuth: []  # Indicates that the endpoint requires a bearer token
+ *       - BearerAuth: []
  *     responses:
  *       '200':
- *         description: Hello message returned successfully.
+ *         description: Hello message retrieved successfully.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/SuccessResponse'
+ *               $ref: '#/components/schemas/HelloMessageResponse'
  *       '401':
- *         description: Unauthorized. Missing, invalid, or expired token.
+ *         description: Unauthorized. Bearer token is missing or invalid.
  *         content:
  *           application/json:
  *             schema:
@@ -210,67 +163,48 @@ module.exports = { auth };
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         description: JWT token obtained after successful login
- *         required: true
- *         schema:
- *           type: string
- *           format: bearer
- *           example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
- */
-
-/**
- * @swagger
  * /alldata:
  *   get:
- *     summary: Fetch all data from the public API.
- *     tags: [API]
+ *     summary: Fetch data from a public API.
+ *     tags: [DataFetch]
  *     responses:
  *       '200':
  *         description: Data fetched successfully.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/APIResponse'
  *       '500':
- *         description: Internal server error.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
-
-/**
- * @swagger
+ *         description: Internal server error during data fetching.
  * /filterdata:
  *   get:
- *     summary: Fetch filtered data from the public API based on category and limit.
- *     tags: [API]
+ *     summary: Fetch filtered data from a public API.
+ *     tags: [DataFetch]
  *     parameters:
  *       - in: query
  *         name: category
- *         schema:
- *           type: string
- *           description: Category to filter the data.
+ *         description: Category for filtering data.
+ *         type: string
  *       - in: query
  *         name: limit
- *         schema:
- *           type: integer
- *           minimum: 1
- *           description: Number of entries to limit the response to.
+ *         description: Limit the number of entries.
+ *         type: integer
+ *         format: int32
  *     responses:
  *       '200':
  *         description: Filtered data fetched successfully.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/APIResponse'
+ *         schema:
+ *           type: object
+ *           properties:
+ *             count:
+ *               type: integer
+ *               example: 5
+ *             entries:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/Entry'
  *       '500':
- *         description: Internal server error.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         description: Internal server error during filtered data fetching.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             error:
+ *               type: string
+ *               example: Internal Server Error
  */
