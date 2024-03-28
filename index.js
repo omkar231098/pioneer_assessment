@@ -1,7 +1,7 @@
 const express = require("express");
 const swaggerJSDoc=require("swagger-jsdoc")
 const swaggerUi=require("swagger-ui-express")
-
+const cors=require("cors")
 const app = express();
 
 const { auth } = require("./Routes/auth.route");
@@ -9,7 +9,7 @@ const { data } = require("./Routes/data.route");
 const { connection } = require("./Config/db");
 
 
-
+app.use(cors())
 
 require("dotenv").config();
 
