@@ -21,8 +21,6 @@ auth.get("/gethello",authenticate,gethello); // User logout
 
 module.exports = { auth };
 
-
-
 /**
  * @swagger
  * components:
@@ -38,6 +36,48 @@ module.exports = { auth };
  *           type: string
  *           description: The password of the user.
  *           example: password123
+ *     APIResponse:
+ *       type: object
+ *       properties:
+ *         count:
+ *           type: integer
+ *           example: 5
+ *           description: Number of entries returned.
+ *         entries:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/APIEntry'
+ *     APIEntry:
+ *       type: object
+ *       properties:
+ *         API:
+ *           type: string
+ *           description: The name of the API.
+ *           example: arcsecond.io
+ *         Description:
+ *           type: string
+ *           description: Description of the API.
+ *           example: Multiple astronomy data sources
+ *         Auth:
+ *           type: string
+ *           description: Authentication type for the API.
+ *           example: ''
+ *         HTTPS:
+ *           type: boolean
+ *           description: Indicates if the API supports HTTPS.
+ *           example: true
+ *         Cors:
+ *           type: string
+ *           description: Cross-Origin Resource Sharing (CORS) policy of the API.
+ *           example: unknown
+ *         Link:
+ *           type: string
+ *           description: Link to the API documentation or website.
+ *           example: https://api.arcsecond.io/
+ *         Category:
+ *           type: string
+ *           description: Category of the API.
+ *           example: Science & Math
  *     ErrorResponse:
  *       type: object
  *       properties:
@@ -49,6 +89,8 @@ module.exports = { auth };
  *           type: string
  *           description: Error message.
  *           example: User not found
+ * 
+ * 
  */
 
 /**
@@ -69,14 +111,7 @@ module.exports = { auth };
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: Registration successful! You can now log in.
+ *               $ref: '#/components/schemas/SuccessResponse'
  *       '400':
  *         description: User already exists.
  *         content:
@@ -109,17 +144,7 @@ module.exports = { auth };
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: Successfully logged in
- *                 accessToken:
- *                   type: string
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *               $ref: '#/components/schemas/SuccessResponse'
  *       '400':
  *         description: Incorrect password or user not found.
  *         content:
@@ -157,10 +182,9 @@ module.exports = { auth };
  *               example: Server error
  */
 
-
 /**
  * @swagger
- * /gethello:
+ * /auth/gethello:
  *   get:
  *     summary: Sample route to return a hello message (protected route).
  *     tags: 
@@ -173,11 +197,7 @@ module.exports = { auth };
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Hello, World!
+ *               $ref: '#/components/schemas/SuccessResponse'
  *       '401':
  *         description: Unauthorized. Missing, invalid, or expired token.
  *         content:
@@ -253,63 +273,4 @@ module.exports = { auth };
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
- */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     APIResponse:
- *       type: object
- *       properties:
- *         count:
- *           type: integer
- *           example: 5
- *           description: Number of entries returned.
- *         entries:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/APIEntry'
- *     APIEntry:
- *       type: object
- *       properties:
- *         API:
- *           type: string
- *           description: The name of the API.
- *           example: arcsecond.io
- *         Description:
- *           type: string
- *           description: Description of the API.
- *           example: Multiple astronomy data sources
- *         Auth:
- *           type: string
- *           description: Authentication type for the API.
- *           example: ''
- *         HTTPS:
- *           type: boolean
- *           description: Indicates if the API supports HTTPS.
- *           example: true
- *         Cors:
- *           type: string
- *           description: Cross-Origin Resource Sharing (CORS) policy of the API.
- *           example: unknown
- *         Link:
- *           type: string
- *           description: Link to the API documentation or website.
- *           example: https://api.arcsecond.io/
- *         Category:
- *           type: string
- *           description: Category of the API.
- *           example: Science & Math
- *     ErrorResponse:
- *       type: object
- *       properties:
- *         success:
- *           type: boolean
- *           description: Indicates whether the request was successful.
- *           example: false
- *         message:
- *           type: string
- *           description: Error message.
- *           example: User not found
  */
